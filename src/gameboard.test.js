@@ -1,3 +1,4 @@
+import { experiments } from 'webpack';
 import Gameboard from './gameboard';
 
 describe('basic board tests', () => {
@@ -104,21 +105,86 @@ describe('placeShip tests', () => {
 });
 
 describe('receiveAttack tests', () => {
-  test('direct hit returns true and marks square', () => {
+  test('direct hit returns true and marks square as successful attack', () => {
     const newBoard = new Gameboard();
     const result = newBoard.placeShip(0, [2, 2], true);
     expect(result).toBe(true);
     expect(newBoard.receiveAttack([2, 3])).toBe(true);
     const { board } = newBoard;
-    expect(board[2][3].hit).toBe(true);
+    expect(board[2][3].attackResult).toBe(true);
   });
 
   test('second attempt on successful hit returns false', () => {
     const newBoard = new Gameboard();
-    const result = newBoard.placeShip(0, [2, 2], true);
-    expect(result).toBe(true);
+    newBoard.placeShip(0, [2, 2], true);
     expect(newBoard.receiveAttack([2, 3])).toBe(true);
+    expect(newBoard.receiveAttack([2, 3])).toBe(false);
+  });
+
+  test('attack on empty square returns true and marks square as missed attack', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [2, 2], true);
+    expect(newBoard.receiveAttack([4, 3])).toBe(true);
     const { board } = newBoard;
-    expect(board[2][3].hit).toBe(true);
+    expect(board[4][3].attackResult).toBe(false);
+  });
+
+  test('attack on neighboring square returns true and marks square without deleting neighbor key', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [2, 2], true);
+    newBoard.placeShip(1, [4, 2], true);
+    expect(newBoard.receiveAttack([3, 3])).toBe(true);
+    const { board } = newBoard;
+    expect(board[3][3].attackResult).toBe(false);
+    expect(board[3][3].neighbor).toContain(0);
+    expect(board[3][3].neighbor).toContain(1);
+  });
+});
+
+describe('allSunk tests', () => {
+  test('reports true after 1/1 ship sunk', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(1, [2, 2], true);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 2]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 3]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 4]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 5]);
+    expect(newBoard.allSunk()).toBe(true);
+  });
+
+  test('reports true after 5/5 ship sunk', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [2, 2], true);
+    newBoard.placeShip(1, [4, 4], false);
+    newBoard.placeShip(2, [2, 9], false);
+    newBoard.placeShip(3, [8, 2], true);
+    newBoard.placeShip(4, [9, 7], true);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 2]);
+    newBoard.receiveAttack([2, 3]);
+    newBoard.receiveAttack([2, 4]);
+    newBoard.receiveAttack([2, 5]);
+    newBoard.receiveAttack([2, 6]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([4, 4]);
+    newBoard.receiveAttack([5, 4]);
+    newBoard.receiveAttack([6, 4]);
+    newBoard.receiveAttack([7, 4]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([2, 9]);
+    newBoard.receiveAttack([3, 9]);
+    newBoard.receiveAttack([4, 9]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([8, 2]);
+    newBoard.receiveAttack([8, 4]);
+    newBoard.receiveAttack([8, 5]);
+    expect(newBoard.allSunk()).toBe(false);
+    newBoard.receiveAttack([9, 7]);
+    newBoard.receiveAttack([9, 8]);
+    expect(newBoard.allSunk()).toBe(true);
   });
 });

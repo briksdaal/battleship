@@ -3,6 +3,8 @@ import Ship from './ship';
 class Gameboard {
   #board;
 
+  #boardShips = [];
+
   constructor() {
     this.#board = [...new Array(10)].map(() => [...new Array(10)].map(() => null));
   }
@@ -31,23 +33,38 @@ class Gameboard {
 
     this.#markNeighboringSquares(ship.length, coordinates, horizontal, id);
 
+    this.#boardShips.push(ship);
+
     return true;
   }
 
   receiveAttack(coordinates) {
+    // coordinates out of board - return false
     if (!Gameboard.#isInBoard(coordinates)) {
       return false;
     }
 
     const [x, y] = coordinates;
+
+    // coordinates are of an attack already received - return false
+    if (this.#board[x][y] !== null && 'attackResult' in this.#board[x][y]) {
+      return false;
+    }
+
     if (this.#board[x][y] instanceof Ship) {
       this.#board[x][y].hit();
-      this.#board[x][y] = { hit: true };
+      this.#board[x][y] = { attackResult: true };
+    } else if (this.#board[x][y] === null) {
+      this.#board[x][y] = { attackResult: false };
     } else {
-      this.#board[x][y] = { hit: false };
+      this.#board[x][y].attackResult = false;
     }
 
     return true;
+  }
+
+  allSunk() {
+    return this.#boardShips.every((singleShip) => singleShip.isSunk());
   }
 
   #isLegalPlacement(length, coordinates, horizontal) {
