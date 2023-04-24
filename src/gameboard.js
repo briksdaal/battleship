@@ -67,6 +67,15 @@ class Gameboard {
     return this.#boardShips.every((singleShip) => singleShip.isSunk());
   }
 
+  allPlaced() {
+    return (this.#boardShips.length === 5)
+    && (this.#boardShips.some((singleShip) => singleShip.id === 0))
+    && (this.#boardShips.some((singleShip) => singleShip.id === 1))
+    && (this.#boardShips.some((singleShip) => singleShip.id === 2))
+    && (this.#boardShips.some((singleShip) => singleShip.id === 3))
+    && (this.#boardShips.some((singleShip) => singleShip.id === 4));
+  }
+
   #isLegalPlacement(length, coordinates, horizontal) {
     const [x, y] = coordinates;
     const untilX = horizontal ? x + 1 : x + length;

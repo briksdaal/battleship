@@ -187,3 +187,19 @@ describe('allSunk tests', () => {
     expect(newBoard.allSunk()).toBe(true);
   });
 });
+
+describe('allPlaced tests', () => {
+  test('reports true after all five ships placed', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [2, 2], true);
+    expect(newBoard.allPlaced()).toBe(false);
+    newBoard.placeShip(1, [5, 7], false);
+    expect(newBoard.allPlaced()).toBe(false);
+    newBoard.placeShip(2, [0, 0], false);
+    expect(newBoard.allPlaced()).toBe(false);
+    newBoard.placeShip(3, [4, 4], false);
+    expect(newBoard.allPlaced()).toBe(false);
+    newBoard.placeShip(4, [9, 4], true);
+    expect(newBoard.allPlaced()).toBe(true);
+  });
+});
