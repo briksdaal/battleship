@@ -16,15 +16,15 @@ class Ship {
     }
   }
 
-  getLength() {
-    return this.#length;
-  }
-
-  getName() {
+  get name() {
     return this.#name;
   }
 
-  getHits() {
+  get length() {
+    return this.#length;
+  }
+
+  get hits() {
     return this.#hits;
   }
 
