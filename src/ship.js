@@ -1,4 +1,6 @@
 class Ship {
+  #id;
+
   #name;
 
   #length;
@@ -7,13 +9,19 @@ class Ship {
 
   constructor(id) {
     if (Number.isInteger(id) && id >= 0 && id < 5) {
+      this.#id = id;
       [this.#name, this.#length] = Ship.#ships[id];
       this.#hits = 0;
     } else {
+      this.#id = -1;
       this.#name = 'Illegal ship';
       this.#length = 0;
       this.#hits = 0;
     }
+  }
+
+  get id() {
+    return this.#id;
   }
 
   get name() {
