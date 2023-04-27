@@ -1,5 +1,4 @@
+import ScreenController from './screenController';
 import './style.css';
 
-const box = document.createElement('div');
-box.classList.add('box');
-document.body.appendChild(box);
+const screenControllerInst = new ScreenController();
