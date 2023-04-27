@@ -53,13 +53,17 @@ class Gameboard {
     const [x, y] = coordinates;
 
     // coordinates are of an attack already received - return false
-    if (this.#board[x][y] !== null && 'attackResult' in this.#board[x][y]) {
+    if (this.#board[x][y] !== null && ('attackResult' in this.#board[x][y] || this.#board[x][y].revealed === true)) {
       return false;
     }
 
     if (this.isShip(coordinates)) {
-      this.#board[x][y].hit();
+      const ship = this.#board[x][y];
+      ship.hit();
       this.#board[x][y] = { attackResult: true };
+      if (ship.isSunk()) {
+        this.#revealNeighbors(ship);
+      }
     } else if (this.#board[x][y] === null) {
       this.#board[x][y] = { attackResult: false };
     } else {
@@ -120,6 +124,19 @@ class Gameboard {
             this.#board[i][j] = { neighbor: [] };
           }
           this.#board[i][j].neighbor.push(id);
+        }
+      }
+    }
+  }
+
+  #revealNeighbors(ship) {
+    const shipId = ship.id;
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (this.#board[i][j] !== null
+          && this.#board[i][j].neighbor
+          && this.#board[i][j].neighbor.includes(shipId)) {
+          this.#board[i][j].revealed = true;
         }
       }
     }

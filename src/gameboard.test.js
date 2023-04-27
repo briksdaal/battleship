@@ -151,6 +151,18 @@ describe('receiveAttack tests', () => {
     expect(board[3][3].neighbor).toContain(0);
     expect(board[3][3].neighbor).toContain(1);
   });
+
+  test.only('attack on revealed neighboring squares returns false', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(4, [2, 2], true);
+    expect(newBoard.receiveAttack([2, 2])).toBe(true);
+    expect(newBoard.receiveAttack([2, 3])).toBe(true);
+    expect(newBoard.receiveAttack([2, 4])).toBe(false);
+    expect(newBoard.receiveAttack([2, 1])).toBe(false);
+    expect(newBoard.receiveAttack([3, 2])).toBe(false);
+    const { board } = newBoard;
+    expect(board[2][4].revealed).toBe(true);
+  });
 });
 
 describe('allSunk tests', () => {

@@ -78,18 +78,25 @@ class ScreenController {
   }
 
   renderPlayerBoard() {
-    const boardState = this.game.player1.gameboard.board;
+    const boardState = this.game.player1.gameboard;
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
-        // if (boardState[i][j] instanceof Ship) {
-        //   this.playerBoard[i][j].textContent = 'X';
-        // }
+        if (boardState.isShip([i, j])) {
+          this.playerBoard[i][j].textContent = 'X';
+        }
       }
     }
   }
 
   renderOpponentBoard() {
-
+    const boardState = this.game.player2.gameboard;
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        if (boardState.isShip([i, j])) {
+          this.opponentBoard[i][j].textContent = 'X';
+        }
+      }
+    }
   }
 
   setClickHandlers() {
