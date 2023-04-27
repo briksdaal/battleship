@@ -74,7 +74,8 @@ class Gameboard {
   }
 
   allSunk() {
-    return this.#boardShips.every((singleShip) => singleShip.isSunk());
+    return this.#boardShips.length > 0
+    && this.#boardShips.every((singleShip) => singleShip.isSunk());
   }
 
   allPlaced() {

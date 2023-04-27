@@ -19,6 +19,20 @@ class GameController {
   get player2() {
     return this.#player2;
   }
+
+  isGameOver() {
+    let winner;
+
+    if (this.#player1.gameboard.allSunk()) {
+      winner = this.#player2;
+    } else if (this.#player2.gameboard.allSunk()) {
+      winner = this.#player1;
+    } else {
+      winner = null;
+    }
+
+    return winner;
+  }
 }
 
 export default GameController;
