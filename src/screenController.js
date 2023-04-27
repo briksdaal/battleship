@@ -7,7 +7,7 @@ class ScreenController {
     this.placeShips();
     this.renderBoard(this.game.player1);
     this.renderBoard(this.game.player2);
-    this.setClickHandlers();
+    this.setTurnHandler();
   }
 
   init() {
@@ -91,19 +91,32 @@ class ScreenController {
       for (let j = 0; j < 10; j += 1) {
         // 0 - empty, 1 - ship, 2 - hit, 3 - miss, 4 - revealed
         const cellForRender = boardState.getCellForRender([i, j]);
-        if (cellForRender) {
-          if (isPlayer1) {
-            boardElements[i][j].textContent = cellForRender;
-          } else if (cellForRender !== 1) {
-            boardElements[i][j].textContent = cellForRender;
-          }
+        if (cellForRender === 1 && isPlayer1) {
+          boardElements[i][j].classList.add('ship');
+        } else if (cellForRender === 2) {
+          boardElements[i][j].classList.add('hit');
+        } else if (cellForRender === 3) {
+          boardElements[i][j].classList.add('miss');
+        } else if (cellForRender === 4) {
+          boardElements[i][j].classList.add('revealed');
         }
       }
     }
   }
 
-  setClickHandlers() {
-
+  setTurnHandler() {
+    this.opponentBoard.forEach((arr) => {
+      arr.forEach((cell) => {
+        cell.addEventListener('click', (e) => {
+          const coordinates = [e.target.dataset.row, e.target.dataset.col];
+          if (this.game.player1.makeMove(coordinates)) {
+            this.renderBoard(this.game.player2);
+            this.game.player2.randomMove();
+            this.renderBoard(this.game.player1);
+          }
+        });
+      });
+    });
   }
 }
 

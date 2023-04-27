@@ -13,7 +13,7 @@
 }
 
 .main {
-    padding: 40px;
+  padding: 40px;
 }
 
 .heading-container {
@@ -25,21 +25,42 @@
 }
 
 .boards-container {
-    padding-top: 60px;
-    display: flex;
-    gap: 300px;
-    justify-content: center;
+  padding-top: 60px;
+  display: flex;
+  gap: 300px;
+  justify-content: center;
 }
 
 .board {
-    display: inline-grid;
-    grid-template-columns: repeat(10, var(--cell-size));
-    grid-template-rows: repeat(10, var(--cell-size));
-    gap: 2px;
-    background-color: black;
-    border: 2px solid black;
+  display: inline-grid;
+  grid-template-columns: repeat(10, var(--cell-size));
+  grid-template-rows: repeat(10, var(--cell-size));
+  gap: 2px;
+  background-color: black;
+  border: 2px solid black;
 }
 
 .cell {
-    background: white;
+  background: white;
+  cursor: pointer;
+}
+
+.cell.ship {
+  background: green;
+  cursor: auto;
+}
+
+.cell.hit {
+  background: red;
+  cursor: auto;
+}
+
+.cell.miss {
+  background: grey;
+  cursor: auto;
+}
+
+.cell.revealed {
+  background: rgb(209, 209, 209);
+  cursor: auto;
 }
