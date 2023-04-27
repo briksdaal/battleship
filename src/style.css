@@ -1,5 +1,45 @@
-.box {
-    width: 100px;
-    height: 100px;
-    background: blue;
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+:root {
+  font-size: 18px;
+  --cell-size: 40px;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+}
+
+.main {
+    padding: 40px;
+}
+
+.heading-container {
+  text-align: center;
+}
+
+.main-heading {
+  font-size: 3rem;
+}
+
+.boards-container {
+    padding-top: 60px;
+    display: flex;
+    gap: 300px;
+    justify-content: center;
+}
+
+.board {
+    display: inline-grid;
+    grid-template-columns: repeat(10, var(--cell-size));
+    grid-template-rows: repeat(10, var(--cell-size));
+    gap: 2px;
+    background-color: black;
+    border: 2px solid black;
+}
+
+.cell {
+    background: white;
 }
