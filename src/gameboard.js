@@ -86,6 +86,30 @@ class Gameboard {
     && (this.#boardShips.some((singleShip) => singleShip.id === 4));
   }
 
+  getCellForRender(coordinates) {
+    // 0 - empty, 1 - ship, 2 - hit, 3 - miss, 4 - revealed
+    const [x, y] = coordinates;
+    const cell = this.#board[x][y];
+
+    let result;
+
+    if (cell === null) {
+      result = 0;
+    } else if (this.isShip(coordinates)) {
+      result = 1;
+    } else if ('attackResult' in cell && cell.attackResult === true) {
+      result = 2;
+    } else if ('attackResult' in cell && cell.attackResult === false) {
+      result = 3;
+    } else if (cell.revealed === true) {
+      result = 4;
+    } else {
+      result = 0;
+    }
+
+    return result;
+  }
+
   #isLegalPlacement(length, coordinates, horizontal) {
     const [x, y] = coordinates;
     const untilX = horizontal ? x + 1 : x + length;

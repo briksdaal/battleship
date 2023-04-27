@@ -152,7 +152,7 @@ describe('receiveAttack tests', () => {
     expect(board[3][3].neighbor).toContain(1);
   });
 
-  test.only('attack on revealed neighboring squares returns false', () => {
+  test('attack on revealed neighboring squares returns false', () => {
     const newBoard = new Gameboard();
     newBoard.placeShip(4, [2, 2], true);
     expect(newBoard.receiveAttack([2, 2])).toBe(true);
@@ -226,5 +226,24 @@ describe('allPlaced tests', () => {
     expect(newBoard.allPlaced()).toBe(false);
     newBoard.placeShip(4, [9, 4], true);
     expect(newBoard.allPlaced()).toBe(true);
+  });
+});
+
+describe('getCellForRender tests', () => {
+  test('returns correct render values', () => {
+    const newBoard = new Gameboard();
+    expect(newBoard.getCellForRender([2, 2])).toBe(0);
+    newBoard.placeShip(4, [2, 2], true);
+    expect(newBoard.getCellForRender([3, 2])).toBe(0);
+    expect(newBoard.getCellForRender([2, 2])).toBe(1);
+    expect(newBoard.getCellForRender([4, 2])).toBe(0);
+    newBoard.receiveAttack([4, 2]);
+    expect(newBoard.getCellForRender([4, 2])).toBe(3);
+    newBoard.receiveAttack([2, 2]);
+    expect(newBoard.getCellForRender([2, 2])).toBe(2);
+    newBoard.receiveAttack([2, 3]);
+    expect(newBoard.getCellForRender([2, 3])).toBe(2);
+    expect(newBoard.getCellForRender([3, 2])).toBe(4);
+    expect(newBoard.getCellForRender([1, 2])).toBe(4);
   });
 });
