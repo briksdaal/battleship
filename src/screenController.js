@@ -5,8 +5,8 @@ class ScreenController {
     this.game = new GameController();
     this.init();
     this.placeShips();
-    this.renderPlayerBoard();
-    this.renderOpponentBoard();
+    this.renderBoard(this.game.player1);
+    this.renderBoard(this.game.player2);
     this.setClickHandlers();
   }
 
@@ -74,26 +74,29 @@ class ScreenController {
 
   placeShips() {
     this.game.player1.testPlace();
-    this.game.player2.randomPlace();
+    this.game.player2.testPlace();
   }
 
-  renderPlayerBoard() {
-    const boardState = this.game.player1.gameboard;
-    for (let i = 0; i < 10; i += 1) {
-      for (let j = 0; j < 10; j += 1) {
-        if (boardState.isShip([i, j])) {
-          this.playerBoard[i][j].textContent = 'X';
-        }
-      }
-    }
-  }
+  renderBoard(player) {
+    const isPlayer1 = player === this.game.player1;
+    const boardState = isPlayer1
+      ? this.game.player1.gameboard
+      : this.game.player2.gameboard;
 
-  renderOpponentBoard() {
-    const boardState = this.game.player2.gameboard;
+    const boardElements = isPlayer1
+      ? this.playerBoard
+      : this.opponentBoard;
+
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
-        if (boardState.isShip([i, j])) {
-          this.opponentBoard[i][j].textContent = 'X';
+        // 0 - empty, 1 - ship, 2 - hit, 3 - miss, 4 - revealed
+        const cellForRender = boardState.getCellForRender([i, j]);
+        if (cellForRender) {
+          if (isPlayer1) {
+            boardElements[i][j].textContent = cellForRender;
+          } else if (cellForRender !== 1) {
+            boardElements[i][j].textContent = cellForRender;
+          }
         }
       }
     }

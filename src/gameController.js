@@ -7,7 +7,7 @@ class GameController {
 
   constructor() {
     this.#player1 = new Player(true);
-    this.#player2 = new Player(true);
+    this.#player2 = new Player(false);
     this.#player1.enemy = this.#player2;
     this.#player2.enemy = this.#player1;
   }
