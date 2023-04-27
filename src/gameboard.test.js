@@ -103,6 +103,19 @@ describe('placeShip tests', () => {
   });
 });
 
+describe('isShip tests', () => {
+  test('direct hit returns true', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(1, [2, 2], true);
+    expect(newBoard.isShip([2, 1])).toBe(false);
+    expect(newBoard.isShip([2, 2])).toBe(true);
+    expect(newBoard.isShip([2, 3])).toBe(true);
+    expect(newBoard.isShip([2, 4])).toBe(true);
+    expect(newBoard.isShip([2, 5])).toBe(true);
+    expect(newBoard.isShip([2, 6])).toBe(false);
+  });
+});
+
 describe('receiveAttack tests', () => {
   test('direct hit returns true and marks square as successful attack', () => {
     const newBoard = new Gameboard();

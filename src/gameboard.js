@@ -38,6 +38,12 @@ class Gameboard {
     return true;
   }
 
+  isShip(coordinates) {
+    const [x, y] = coordinates;
+
+    return this.#board[x][y] instanceof Ship;
+  }
+
   receiveAttack(coordinates) {
     // coordinates out of board - return false
     if (!Gameboard.#isInBoard(coordinates)) {
@@ -51,7 +57,7 @@ class Gameboard {
       return false;
     }
 
-    if (this.#board[x][y] instanceof Ship) {
+    if (this.isShip(coordinates)) {
       this.#board[x][y].hit();
       this.#board[x][y] = { attackResult: true };
     } else if (this.#board[x][y] === null) {
