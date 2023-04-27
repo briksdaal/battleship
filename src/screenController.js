@@ -11,8 +11,8 @@ class ScreenController {
   }
 
   init() {
-    const main = document.createElement('div');
-    main.classList.add('main');
+    this.main = document.createElement('div');
+    this.main.classList.add('main');
 
     const headingContainer = document.createElement('div');
     headingContainer.classList.add('heading-container');
@@ -28,14 +28,14 @@ class ScreenController {
     const opponentContainer = document.createElement('div');
     opponentContainer.classList.add('opponent-container');
 
-    const userHeading = document.createElement('h2');
+    const userHeading = document.createElement('h3');
     userHeading.textContent = 'Player Board';
     const userBoard = this.createBoard(true);
     userBoard.classList.add('user-board');
     userContainer.appendChild(userHeading);
     userContainer.appendChild(userBoard);
 
-    const opponentHeading = document.createElement('h2');
+    const opponentHeading = document.createElement('h3');
     opponentHeading.textContent = 'PC Board';
     const opponentBoard = this.createBoard(false);
     opponentBoard.classList.add('opponent-board');
@@ -45,9 +45,17 @@ class ScreenController {
     boardsContainer.appendChild(userContainer);
     boardsContainer.appendChild(opponentContainer);
 
-    main.appendChild(headingContainer);
-    main.appendChild(boardsContainer);
-    document.body.appendChild(main);
+    const statusContainer = document.createElement('div');
+    statusContainer.classList.add('status-container');
+    this.status = document.createElement('h2');
+    this.status.classList.add('game-status');
+    this.status.textContent = 'Place ships...';
+    statusContainer.appendChild(this.status);
+
+    this.main.appendChild(headingContainer);
+    this.main.appendChild(boardsContainer);
+    this.main.appendChild(statusContainer);
+    document.body.appendChild(this.main);
   }
 
   createBoard(isUser) {
@@ -107,16 +115,25 @@ class ScreenController {
   setTurnHandler() {
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
-        cell.addEventListener('click', (e) => {
-          const coordinates = [e.target.dataset.row, e.target.dataset.col];
-          if (this.game.player1.makeMove(coordinates)) {
-            this.renderBoard(this.game.player2);
-            this.game.player2.randomMove();
-            this.renderBoard(this.game.player1);
-          }
-        });
+        cell.addEventListener('click', this.playerClick.bind(this));
       });
     });
+  }
+
+  playerClick(e) {
+    if (!this.game.gameOver) {
+      const coordinates = [e.target.dataset.row, e.target.dataset.col];
+      if (this.game.player1.makeMove(coordinates)) {
+        this.renderBoard(this.game.player2);
+        this.game.player2.randomMove();
+        this.renderBoard(this.game.player1);
+      }
+
+      if (this.game.isGameOver()) {
+        this.main.classList.add('game-over');
+        this.status.textContent = `Game Over, ${this.game.gameOver === this.game.player1 ? 'You' : 'PC'} won!`;
+      }
+    }
   }
 }
 

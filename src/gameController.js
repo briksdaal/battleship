@@ -10,6 +10,7 @@ class GameController {
     this.#player2 = new Player(false);
     this.#player1.enemy = this.#player2;
     this.#player2.enemy = this.#player1;
+    this.gameOver = null;
   }
 
   get player1() {
@@ -31,6 +32,7 @@ class GameController {
       winner = null;
     }
 
+    this.gameOver = winner;
     return winner;
   }
 }
