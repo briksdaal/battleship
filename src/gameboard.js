@@ -17,7 +17,7 @@ class Gameboard {
   placeShip(id, coordinates, horizontal = true) {
     const ship = new Ship(id);
 
-    if (ship.id === -1 || !this.#isLegalPlacement(ship.length, coordinates, horizontal)) {
+    if (ship.id === -1 || !this.isLegalPlacement(ship.length, coordinates, horizontal)) {
       return false;
     }
 
@@ -111,7 +111,7 @@ class Gameboard {
     return result;
   }
 
-  #isLegalPlacement(length, coordinates, horizontal) {
+  isLegalPlacement(length, coordinates, horizontal) {
     const [x, y] = coordinates;
     const untilX = horizontal ? x + 1 : x + length;
     const untilY = !horizontal ? y + 1 : y + length;

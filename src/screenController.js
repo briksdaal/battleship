@@ -4,10 +4,7 @@ class ScreenController {
   constructor() {
     this.game = new GameController();
     this.init();
-    this.placeShips();
-    this.renderBoard(this.game.player1);
-    this.renderBoard(this.game.player2);
-    this.setTurnHandler();
+    this.placeShips2();
   }
 
   init() {
@@ -85,6 +82,61 @@ class ScreenController {
     this.game.player2.testPlace();
   }
 
+  currentShip = 0;
+
+  placeShips2() {
+    document.querySelector('.user-board').addEventListener('mouseout', this.player1Render);
+    this.playerBoard.forEach((arr) => {
+      arr.forEach((cell) => {
+        cell.addEventListener('mouseover', this.showShip);
+        cell.addEventListener('click', this.placeShipOnClick);
+      });
+    });
+  }
+
+  showShip = (e) => {
+    const length = ScreenController.#ships[this.currentShip][1];
+    this.renderBoard(this.game.player1);
+    const coordinates = [+e.target.dataset.row, +e.target.dataset.col];
+    const [x, y] = coordinates;
+
+    const legal = this.game.player1.gameboard.isLegalPlacement(
+      length,
+      coordinates,
+      true,
+    );
+    const classer = legal ? 'ship' : 'hit';
+
+    for (let i = y; i < y + length && i < 10; i += 1) {
+      this.playerBoard[x][i].classList.add(classer);
+    }
+  };
+
+  placeShipOnClick = (e) => {
+    const coordinates = [+e.target.dataset.row, +e.target.dataset.col];
+    if (this.game.player1.gameboard.placeShip(this.currentShip, coordinates, true)) {
+      this.currentShip += 1;
+      if (this.currentShip === 5) {
+        this.finishPlacementStage();
+      }
+    }
+  };
+
+  finishPlacementStage() {
+    document.querySelector('.user-board').removeEventListener('mouseout', this.player1Render);
+    this.playerBoard.forEach((arr) => {
+      arr.forEach((cell) => {
+        cell.removeEventListener('mouseover', this.showShip);
+        cell.removeEventListener('click', this.placeShipOnClick);
+      });
+    });
+
+    this.game.player2.randomPlace();
+    this.setTurnHandler();
+  }
+
+  player1Render = () => this.renderBoard(this.game.player1);
+
   renderBoard(player) {
     const isPlayer1 = player === this.game.player1;
     const boardState = isPlayer1
@@ -97,6 +149,7 @@ class ScreenController {
 
     for (let i = 0; i < 10; i += 1) {
       for (let j = 0; j < 10; j += 1) {
+        boardElements[i][j].className = 'cell';
         // 0 - empty, 1 - ship, 2 - hit, 3 - miss, 4 - revealed
         const cellForRender = boardState.getCellForRender([i, j]);
         if (cellForRender === 1 && isPlayer1) {
@@ -124,17 +177,21 @@ class ScreenController {
 
   playerMove(e) {
     const coordinates = [e.target.dataset.row, e.target.dataset.col];
+
     if (this.game.player1.makeMove(coordinates)) {
+      // if successful player move then render opponent board and check for game over
       this.renderBoard(this.game.player2);
       let gameResult = this.game.isGameOver();
 
       if (!gameResult) {
+      // if game not over make pc move, render player board and check for game over
         this.game.player2.randomMove();
         this.renderBoard(this.game.player1);
         gameResult = this.game.isGameOver();
       }
 
       if (gameResult) {
+      // if game over process result
         this.gameOverCleanUp(gameResult);
       }
     }
@@ -149,6 +206,14 @@ class ScreenController {
       });
     });
   }
+
+  static #ships = [
+    ['Carrier', 5],
+    ['Battleship', 4],
+    ['Destroyer', 3],
+    ['Submarine', 3],
+    ['Patrol Boat', 2],
+  ];
 }
 
 export default ScreenController;
