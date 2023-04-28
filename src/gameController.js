@@ -22,6 +22,10 @@ class GameController {
   }
 
   isGameOver() {
+    if (this.gameOver) {
+      return this.gameOver;
+    }
+
     let winner;
 
     if (this.#player1.gameboard.allSunk()) {

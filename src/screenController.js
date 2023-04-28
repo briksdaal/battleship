@@ -115,25 +115,39 @@ class ScreenController {
   setTurnHandler() {
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
-        cell.addEventListener('click', this.playerClick.bind(this));
+        cell.addEventListener('click', this.boundPlayerMove);
       });
     });
   }
 
-  playerClick(e) {
-    if (!this.game.gameOver) {
-      const coordinates = [e.target.dataset.row, e.target.dataset.col];
-      if (this.game.player1.makeMove(coordinates)) {
-        this.renderBoard(this.game.player2);
+  boundPlayerMove = this.playerMove.bind(this);
+
+  playerMove(e) {
+    const coordinates = [e.target.dataset.row, e.target.dataset.col];
+    if (this.game.player1.makeMove(coordinates)) {
+      this.renderBoard(this.game.player2);
+      let gameResult = this.game.isGameOver();
+
+      if (!gameResult) {
         this.game.player2.randomMove();
         this.renderBoard(this.game.player1);
+        gameResult = this.game.isGameOver();
       }
 
-      if (this.game.isGameOver()) {
-        this.main.classList.add('game-over');
-        this.status.textContent = `Game Over, ${this.game.gameOver === this.game.player1 ? 'You' : 'PC'} won!`;
+      if (gameResult) {
+        this.gameOverCleanUp(gameResult);
       }
     }
+  }
+
+  gameOverCleanUp(winner) {
+    this.main.classList.add('game-over');
+    this.status.textContent = `Game Over, ${winner === this.game.player1 ? 'You' : 'PC'} won!`;
+    this.opponentBoard.forEach((arr) => {
+      arr.forEach((cell) => {
+        cell.removeEventListener('click', this.boundPlayerMove);
+      });
+    });
   }
 }
 
