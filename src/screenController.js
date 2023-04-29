@@ -4,7 +4,7 @@ class ScreenController {
   constructor() {
     this.game = new GameController();
     this.init();
-    this.placeShips2();
+    this.placeShips();
   }
 
   init() {
@@ -46,7 +46,6 @@ class ScreenController {
     statusContainer.classList.add('status-container');
     this.status = document.createElement('h2');
     this.status.classList.add('game-status');
-    this.status.textContent = 'Place ships...';
     statusContainer.appendChild(this.status);
 
     this.main.appendChild(headingContainer);
@@ -56,7 +55,7 @@ class ScreenController {
   }
 
   createBoard(isUser) {
-    const cells = [...new Array(10)].map((x) => [...new Array(10)]);
+    const cells = [...new Array(10)].map(() => [...new Array(10)]);
     const board = document.createElement('div');
     board.classList.add('board');
     for (let i = 0; i < 10; i += 1) {
@@ -78,13 +77,17 @@ class ScreenController {
   }
 
   placeShips() {
-    this.game.player1.testPlace();
-    this.game.player2.testPlace();
-  }
+    this.status.textContent = 'Place Carrier...';
+    this.currentShip = 0;
 
-  currentShip = 0;
+    this.rotationBtn = document.createElement('button');
+    this.rotationBtn.textContent = 'RRR';
+    this.rotationBtn.classList.add('rotation-btn');
+    document.querySelector('.user-container').appendChild(this.rotationBtn);
 
-  placeShips2() {
+    this.rotationDirection = true;
+    this.rotationBtn.addEventListener('click', this.changeRotation);
+
     document.querySelector('.user-board').addEventListener('mouseout', this.player1Render);
     this.playerBoard.forEach((arr) => {
       arr.forEach((cell) => {
@@ -103,26 +106,56 @@ class ScreenController {
     const legal = this.game.player1.gameboard.isLegalPlacement(
       length,
       coordinates,
-      true,
+      this.rotationDirection,
     );
     const classer = legal ? 'ship' : 'hit';
 
-    for (let i = y; i < y + length && i < 10; i += 1) {
-      this.playerBoard[x][i].classList.add(classer);
-    }
-  };
-
-  placeShipOnClick = (e) => {
-    const coordinates = [+e.target.dataset.row, +e.target.dataset.col];
-    if (this.game.player1.gameboard.placeShip(this.currentShip, coordinates, true)) {
-      this.currentShip += 1;
-      if (this.currentShip === 5) {
-        this.finishPlacementStage();
+    if (this.rotationDirection) {
+      for (let i = y; i < y + length && i < 10; i += 1) {
+        this.playerBoard[x][i].classList.add(classer);
+      }
+    } else {
+      for (let i = x; i < x + length && i < 10; i += 1) {
+        this.playerBoard[i][y].classList.add(classer);
       }
     }
   };
 
+  changeRotation = () => { this.rotationDirection = !this.rotationDirection; };
+
+  player1Render = () => this.renderBoard(this.game.player1);
+
+  placeShipOnClick = (e) => {
+    const coordinates = [+e.target.dataset.row, +e.target.dataset.col];
+    if (this.game.player1.gameboard.placeShip(
+      this.currentShip,
+      coordinates,
+      this.rotationDirection,
+    )) {
+      this.afterShipPlaced();
+    }
+  };
+
+  afterShipPlaced() {
+    this.rotationDirection = true;
+    this.currentShip += 1;
+
+    if (this.currentShip === 5) {
+      // when all ships placed continue to next stage
+      this.finishPlacementStage();
+    } else {
+      // update status text if needed
+      const shipName = ScreenController.#ships[this.currentShip][0];
+      this.status.textContent = `Place ${shipName}...`;
+    }
+  }
+
   finishPlacementStage() {
+    // remove rotate button
+    this.rotationBtn.removeEventListener('click', this.changeRotation);
+    this.rotationBtn.remove();
+
+    // remove placement event handlers
     document.querySelector('.user-board').removeEventListener('mouseout', this.player1Render);
     this.playerBoard.forEach((arr) => {
       arr.forEach((cell) => {
@@ -131,11 +164,12 @@ class ScreenController {
       });
     });
 
+    // random place for pc board
     this.game.player2.randomPlace();
+
+    // set turn click handlers for beginning of game
     this.setTurnHandler();
   }
-
-  player1Render = () => this.renderBoard(this.game.player1);
 
   renderBoard(player) {
     const isPlayer1 = player === this.game.player1;
@@ -166,6 +200,8 @@ class ScreenController {
   }
 
   setTurnHandler() {
+    this.status.textContent = 'Attack!';
+
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
         cell.addEventListener('click', this.boundPlayerMove);

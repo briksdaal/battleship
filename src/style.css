@@ -64,3 +64,8 @@
   background: rgb(209, 209, 209);
   cursor: auto;
 }
+
+.rotation-btn {
+  width: 40px;
+  height: 40px;
+}
