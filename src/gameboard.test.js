@@ -1,4 +1,3 @@
-import { experiments } from 'webpack';
 import Gameboard from './gameboard';
 
 describe('basic board tests', () => {

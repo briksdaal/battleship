@@ -11,6 +11,7 @@ class Player {
     this.#isHuman = isHuman;
     this.gameboard = new Gameboard();
     this.#potentialMoves = [];
+    this.smell = null;
   }
 
   set enemy(enemyPlayer) {
@@ -27,6 +28,10 @@ class Player {
 
   reset() {
     this.#potentialMoves = [];
+  }
+
+  #getLastEvent() {
+    return this.#enemy.gameboard.lastEvent;
   }
 
   makeMove(coordinates) {
@@ -48,9 +53,43 @@ class Player {
   }
 
   pcMove() {
-    if (this.#potentialMoves.length === 0) {
+    const lastEvent = this.#getLastEvent();
+    console.log(lastEvent);
+
+    if (lastEvent === null) {
       this.randomMove();
+    } else if (lastEvent.type === 2) {
+      this.smell = null;
+      this.#potentialMoves = [];
+      this.randomMove();
+    } else if (lastEvent.type === 0) {
+      if (this.#potentialMoves.length === 0) {
+        this.randomMove();
+      } else {
+        this.#tryPotentials();
+      }
+    } else if (lastEvent.type === 1) {
+      const [x, y] = lastEvent.coordinates;
+      this.#potentialMoves.push([x - 1, y]);
+      this.#potentialMoves.push([x + 1, y]);
+      this.#potentialMoves.push([x, y - 1]);
+      this.#potentialMoves.push([x, y + 1]);
+      if (!this.smell) {
+        this.smell = lastEvent.coordinates;
+      } else if (this.smell[0] === x) {
+        this.#potentialMoves = this.#potentialMoves.filter((coor) => coor[0] === x);
+      } else if (this.smell[1] === y) {
+        this.#potentialMoves = this.#potentialMoves.filter((coor) => coor[1] === y);
+      }
+      this.#tryPotentials();
     }
+  }
+
+  #tryPotentials() {
+    let coordinates;
+    do {
+      coordinates = this.#potentialMoves.pop();
+    } while (!this.makeMove(coordinates));
   }
 
   randomPlace() {
