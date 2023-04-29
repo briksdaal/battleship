@@ -126,6 +126,11 @@ class Gameboard {
     return true;
   }
 
+  reset() {
+    this.#board = this.#board.map((arr) => arr.map(() => null));
+    this.#boardShips = [];
+  }
+
   static #isInBoard(coordinates) {
     const [x, y] = coordinates;
     return (x >= 0 && x < 10) && (y >= 0 && y < 10);

@@ -55,6 +55,10 @@ class Player {
     return true;
   }
 
+  singlePlace() {
+    this.gameboard.placeShip(0, [0, 1], true);
+  }
+
   testPlace() {
     this.gameboard.placeShip(0, [0, 1], true);
     this.gameboard.placeShip(1, [2, 0], true);

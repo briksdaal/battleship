@@ -241,7 +241,23 @@ class ScreenController {
         cell.removeEventListener('click', this.boundPlayerMove);
       });
     });
+
+    this.playAgainBtn = document.createElement('button');
+    this.playAgainBtn.classList.add('play-again-btn');
+    this.playAgainBtn.textContent = 'Play Again';
+    document.querySelector('.status-container').appendChild(this.playAgainBtn);
+    this.playAgainBtn.addEventListener('click', this.playAgain);
   }
+
+  playAgain = () => {
+    this.playAgainBtn.removeEventListener('click', this.playAgain);
+    this.playAgainBtn.remove();
+
+    this.game.reset();
+    this.renderBoard(this.game.player1);
+    this.renderBoard(this.game.player2);
+    this.placeShips();
+  };
 
   static #ships = [
     ['Carrier', 5],

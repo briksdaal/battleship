@@ -39,6 +39,12 @@ class GameController {
     this.gameOver = winner;
     return winner;
   }
+
+  reset() {
+    this.player1.gameboard.reset();
+    this.player2.gameboard.reset();
+    this.gameOver = null;
+  }
 }
 
 export default GameController;

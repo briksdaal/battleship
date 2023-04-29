@@ -247,3 +247,18 @@ describe('getCellForRender tests', () => {
     expect(newBoard.getCellForRender([1, 2])).toBe(4);
   });
 });
+
+describe('reset tests', () => {
+  test('reset nullifies board', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [0, 0], true);
+    newBoard.placeShip(1, [5, 4], false);
+    newBoard.reset();
+    const { board } = newBoard;
+    for (let i = 0; i < 10; i += 1) {
+      for (let j = 0; j < 10; j += 1) {
+        expect(board[i][j]).toBeNull();
+      }
+    }
+  });
+});
