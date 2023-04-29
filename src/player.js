@@ -28,6 +28,7 @@ class Player {
 
   reset() {
     this.#potentialMoves = [];
+    this.smell = null;
   }
 
   #getLastEvent() {

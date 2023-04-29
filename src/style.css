@@ -2,7 +2,9 @@
 
 :root {
   font-size: 18px;
-  --cell-size: 40px;
+  --cell: 40px;
+  --border: 2px;
+  --board-gap: 300px;
 }
 
 * {
@@ -24,20 +26,24 @@
   font-size: 3rem;
 }
 
+.heading-container {
+  padding-bottom: 60px;
+}
+
 .boards-container {
-  padding-top: 60px;
   display: flex;
-  gap: 300px;
+  gap: var(--board-gap);
   justify-content: center;
+  padding-bottom: 60px;
 }
 
 .board {
   display: inline-grid;
-  grid-template-columns: repeat(10, var(--cell-size));
-  grid-template-rows: repeat(10, var(--cell-size));
-  gap: 2px;
+  grid-template-columns: repeat(10, var(--cell));
+  grid-template-rows: repeat(10, var(--cell));
+  gap: var(--border);
   background-color: black;
-  border: 2px solid black;
+  border: var(--border) solid black;
 }
 
 .cell {
@@ -65,7 +71,52 @@
   cursor: auto;
 }
 
+.user-container {
+  position: relative;
+}
+
 .rotation-btn {
-  width: 40px;
-  height: 40px;
+  position: absolute;
+  border: none;
+  background: none;
+  font-size: 3rem;
+  cursor: pointer;
+  right: -60px;
+  top: 208px;
+}
+
+.boards-container h3 {
+  font-size: 1.5rem;
+  text-align: center;
+  padding-bottom: 16px;
+}
+
+.boards-container {
+  transition: transform 0.3s ease-out;
+}
+
+.placement .boards-container {
+  transform: translateX(calc((var(--border) * 11 + var(--cell) * 10 + var(--board-gap)) / 2));
+}
+
+.opponent-container {
+  opacity: 1;
+  transition: opacity 0.5s;
+  transition-delay: 0.2s;
+}
+
+.placement .opponent-container {
+  opacity: 0;
+}
+
+.active-game .boards-container {
+  transform: translateX(0);
+}
+
+.status-container {
+  text-align: center;
+}
+
+.status-container h2{
+  padding-bottom: 8px;
 }

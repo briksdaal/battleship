@@ -1,3 +1,5 @@
+import { mdiRefresh } from '@mdi/js';
+import createSvg from './createSvg';
 import GameController from './gameController';
 
 class ScreenController {
@@ -9,7 +11,8 @@ class ScreenController {
 
   init() {
     this.main = document.createElement('div');
-    this.main.classList.add('main');
+    this.main.className = 'main';
+    this.main.classList.add('placement');
 
     const headingContainer = document.createElement('div');
     headingContainer.classList.add('heading-container');
@@ -81,9 +84,14 @@ class ScreenController {
     this.currentShip = 0;
 
     this.rotationBtn = document.createElement('button');
-    this.rotationBtn.textContent = 'RRR';
+    this.rotationBtn.appendChild(createSvg(mdiRefresh));
     this.rotationBtn.classList.add('rotation-btn');
     document.querySelector('.user-container').appendChild(this.rotationBtn);
+
+    const rotateText = document.createElement('h4');
+    rotateText.classList.add('status-rotate-text');
+    rotateText.textContent = 'Press rotate button to change ship alignment';
+    document.querySelector('.status-container').appendChild(rotateText);
 
     this.rotationDirection = true;
     this.rotationBtn.addEventListener('click', this.changeRotation);
@@ -151,9 +159,10 @@ class ScreenController {
   }
 
   finishPlacementStage() {
-    // remove rotate button
+    // remove rotate button and rotate text
     this.rotationBtn.removeEventListener('click', this.changeRotation);
     this.rotationBtn.remove();
+    document.querySelector('.status-rotate-text').remove();
 
     // remove placement event handlers
     document.querySelector('.user-board').removeEventListener('mouseout', this.player1Render);
@@ -200,6 +209,8 @@ class ScreenController {
   }
 
   setTurnHandler() {
+    this.main.className = 'main';
+    this.main.classList.add('active-game');
     this.status.textContent = 'Attack!';
 
     this.opponentBoard.forEach((arr) => {
@@ -234,6 +245,7 @@ class ScreenController {
   }
 
   gameOverCleanUp(winner) {
+    this.main.className = 'main';
     this.main.classList.add('game-over');
     this.status.textContent = `Game Over, ${winner === this.game.player1 ? 'You' : 'PC'} won!`;
     this.opponentBoard.forEach((arr) => {
