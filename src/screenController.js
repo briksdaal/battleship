@@ -221,7 +221,7 @@ class ScreenController {
 
       if (!gameResult) {
       // if game not over make pc move, render player board and check for game over
-        this.game.player2.randomMove();
+        this.game.player2.pcMove();
         this.renderBoard(this.game.player1);
         gameResult = this.game.isGameOver();
       }

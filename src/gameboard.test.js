@@ -1,3 +1,4 @@
+import { experiments } from 'webpack';
 import Gameboard from './gameboard';
 
 describe('basic board tests', () => {
@@ -260,5 +261,38 @@ describe('reset tests', () => {
         expect(board[i][j]).toBeNull();
       }
     }
+  });
+});
+
+describe('lastEvent tests', () => {
+  test('on new board last event returns null', () => {
+    const newBoard = new Gameboard();
+    expect(newBoard.lastEvent).toBeNull();
+  });
+
+  test('after miss returns object with coordinates and type 0', () => {
+    const newBoard = new Gameboard();
+    newBoard.receiveAttack([0, 0]);
+    expect(newBoard.lastEvent.coordinates).toEqual([0, 0]);
+    expect(newBoard.lastEvent.type).toBe(0);
+  });
+
+  test('after hit returns object with coordinates and type 1', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(0, [0, 0], true);
+    newBoard.receiveAttack([0, 2]);
+    expect(newBoard.lastEvent.coordinates).toEqual([0, 2]);
+    expect(newBoard.lastEvent.type).toBe(1);
+  });
+
+  test('after sink returns object with coordinates and type 2', () => {
+    const newBoard = new Gameboard();
+    newBoard.placeShip(4, [2, 0], false);
+    newBoard.receiveAttack([2, 0]);
+    expect(newBoard.lastEvent.coordinates).toEqual([2, 0]);
+    expect(newBoard.lastEvent.type).toBe(1);
+    newBoard.receiveAttack([3, 0]);
+    expect(newBoard.lastEvent.coordinates).toEqual([3, 0]);
+    expect(newBoard.lastEvent.type).toBe(2);
   });
 });

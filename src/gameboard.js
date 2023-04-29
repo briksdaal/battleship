@@ -1,12 +1,15 @@
 import Ship from './ship';
 
 class Gameboard {
+  #lastEvent;
+
   #board;
 
   #boardShips = [];
 
   constructor() {
     this.#board = [...new Array(10)].map(() => [...new Array(10)].map(() => null));
+    this.#lastEvent = null;
   }
 
   get board() {
@@ -57,12 +60,17 @@ class Gameboard {
       return false;
     }
 
+    this.#lastEvent = { coordinates, type: 0 };
+
     if (this.isShip(coordinates)) {
       const ship = this.#board[x][y];
       ship.hit();
       this.#board[x][y] = { attackResult: true };
+      this.#lastEvent.type = 1;
+
       if (ship.isSunk()) {
         this.#revealNeighbors(ship);
+        this.#lastEvent.type = 2;
       }
     } else if (this.#board[x][y] === null) {
       this.#board[x][y] = { attackResult: false };
@@ -129,6 +137,11 @@ class Gameboard {
   reset() {
     this.#board = this.#board.map((arr) => arr.map(() => null));
     this.#boardShips = [];
+    this.#lastEvent = null;
+  }
+
+  get lastEvent() {
+    return this.#lastEvent;
   }
 
   static #isInBoard(coordinates) {

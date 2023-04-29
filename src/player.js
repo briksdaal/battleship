@@ -5,9 +5,12 @@ class Player {
 
   #enemy;
 
+  #potentialMoves;
+
   constructor(isHuman) {
     this.#isHuman = isHuman;
     this.gameboard = new Gameboard();
+    this.#potentialMoves = [];
   }
 
   set enemy(enemyPlayer) {
@@ -20,6 +23,10 @@ class Player {
 
   get isHuman() {
     return this.#isHuman;
+  }
+
+  reset() {
+    this.#potentialMoves = [];
   }
 
   makeMove(coordinates) {
@@ -40,6 +47,12 @@ class Player {
     return true;
   }
 
+  pcMove() {
+    if (this.#potentialMoves.length === 0) {
+      this.randomMove();
+    }
+  }
+
   randomPlace() {
     for (let i = 0; i < 5; i += 1) {
       let needToPlace = true;
@@ -53,10 +66,6 @@ class Player {
       }
     }
     return true;
-  }
-
-  singlePlace() {
-    this.gameboard.placeShip(0, [0, 1], true);
   }
 
   testPlace() {
