@@ -1,9 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   optimization: {
     usedExports: true,
   },
@@ -11,9 +11,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Battleship',
-      // template: '!!handlebars-loader!./src/index.hbs',
     }),
-    // new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
   devServer: {
     static: './dist',
