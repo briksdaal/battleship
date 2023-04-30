@@ -16,8 +16,10 @@
 }
 
 .main {
-  padding: 40px;
-  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding-top: 40px;
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
@@ -40,6 +42,23 @@
   padding-bottom: var(--padding);
 }
 
+.status-container {
+  flex: 1;
+  text-align: center;
+  padding-bottom: var(--padding);
+}
+
+.footer {
+  padding: 8px 0;
+  text-align: center;
+  background: grey;
+  color: white;
+}
+
+.footer svg {
+  fill: white;
+}
+
 .board {
   display: inline-grid;
   grid-template-columns: repeat(10, var(--cell));
@@ -47,6 +66,14 @@
   gap: var(--border);
   background-color: black;
   border: var(--border) solid black;
+}
+
+.placement .user-container .cell {
+  cursor: pointer;
+}
+
+.active-game .user-container .cell {
+  cursor: auto;
 }
 
 .cell {
@@ -116,11 +143,6 @@
   opacity: 0;
 }
 
-.status-container {
-  text-align: center;
-  padding-bottom:  var(--padding);;
-}
-
 .status-container h2 {
   padding-bottom: 8px;
 }
@@ -139,13 +161,12 @@
 }
 
 @media only screen and (max-width: 1200px) {
-  .main {
-    display: flex;
-    flex-direction: column;
-  }
-
   .boards-container {
     order: 2;
+  }
+
+  .footer {
+    order: 4;
   }
 
   .boards-container {

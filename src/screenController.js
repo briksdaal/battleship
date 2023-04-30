@@ -1,4 +1,4 @@
-import { mdiRefresh } from '@mdi/js';
+import { mdiRefresh, mdiGithub } from '@mdi/js';
 import createSvg from './createSvg';
 import GameController from './gameController';
 
@@ -10,9 +10,11 @@ class ScreenController {
   }
 
   init() {
+    // main container
     this.main = document.createElement('div');
     this.main.className = 'main';
 
+    // heading container
     const headingContainer = document.createElement('div');
     headingContainer.classList.add('heading-container');
     const mainHeading = document.createElement('h1');
@@ -20,6 +22,7 @@ class ScreenController {
     mainHeading.textContent = 'Battleship';
     headingContainer.appendChild(mainHeading);
 
+    // board containers
     const boardsContainer = document.createElement('div');
     boardsContainer.classList.add('boards-container');
     const userContainer = document.createElement('div');
@@ -44,15 +47,30 @@ class ScreenController {
     boardsContainer.appendChild(userContainer);
     boardsContainer.appendChild(opponentContainer);
 
+    // status text container
     const statusContainer = document.createElement('div');
     statusContainer.classList.add('status-container');
     this.status = document.createElement('h2');
     this.status.classList.add('game-status');
     statusContainer.appendChild(this.status);
 
+    // footer container
+    const footerContainer = document.createElement('div');
+    footerContainer.classList.add('footer');
+    const para = document.createElement('p');
+    para.textContent = `Copyright © ${new Date().getFullYear()} Briksdaal `;
+    const ghLink = document.createElement('a');
+    ghLink.setAttribute('href', 'https://github.com/briksdaal');
+    ghLink.setAttribute('target', '_blank');
+    ghLink.appendChild(createSvg(mdiGithub));
+    para.appendChild(ghLink);
+    footerContainer.appendChild(para);
+
+    // append all to main
     this.main.appendChild(headingContainer);
     this.main.appendChild(boardsContainer);
     this.main.appendChild(statusContainer);
+    this.main.appendChild(footerContainer);
     document.body.appendChild(this.main);
   }
 
