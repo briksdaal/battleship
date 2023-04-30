@@ -216,7 +216,7 @@ class ScreenController {
         boardElements[i][j].className = 'cell';
         // 0 - empty, 1 - ship, 2 - hit, 3 - miss, 4 - revealed
         const cellForRender = boardState.getCellForRender([i, j]);
-        if (cellForRender === 1 && isPlayer1) {
+        if ((cellForRender === 1 && isPlayer1) || (cellForRender === 1 && this.game.isGameOver())) {
           boardElements[i][j].classList.add('ship');
         } else if (cellForRender === 2) {
           boardElements[i][j].classList.add('hit');
@@ -257,7 +257,8 @@ class ScreenController {
       }
 
       if (gameResult) {
-      // if game over process result
+      // if game over show enemy board and  process result
+        this.renderBoard(this.game.player2);
         this.gameOverCleanUp(gameResult);
       }
     }
@@ -267,7 +268,7 @@ class ScreenController {
     this.main.className = 'main';
     this.main.classList.remove('active-game');
     this.main.classList.add('game-over');
-    this.status.textContent = `Game Over, ${winner === this.game.player1 ? 'You' : 'PC'} won!`;
+    this.status.textContent = `Game Over, ${winner === this.game.player1 ? 'You' : 'PC'} Won!`;
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
         cell.removeEventListener('click', this.playerMove);

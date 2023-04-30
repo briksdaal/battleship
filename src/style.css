@@ -101,6 +101,10 @@
   border: var(--border) solid black;
 }
 
+.game-over .board {
+  opacity: 0.5;
+}
+
 .cell {
   background: white;
   cursor: pointer;
