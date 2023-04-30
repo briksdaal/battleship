@@ -41,8 +41,8 @@ class GameController {
   }
 
   reset() {
-    this.player1.gameboard.reset();
-    this.player2.gameboard.reset();
+    this.player1.reset();
+    this.player2.reset();
     this.gameOver = null;
   }
 }

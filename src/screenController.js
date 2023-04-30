@@ -12,7 +12,6 @@ class ScreenController {
   init() {
     this.main = document.createElement('div');
     this.main.className = 'main';
-    this.main.classList.add('placement');
 
     const headingContainer = document.createElement('div');
     headingContainer.classList.add('heading-container');
@@ -80,6 +79,8 @@ class ScreenController {
   }
 
   placeShips() {
+    this.main.classList.add('placement');
+
     this.status.textContent = 'Place Carrier...';
     this.currentShip = 0;
 

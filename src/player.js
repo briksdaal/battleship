@@ -29,6 +29,7 @@ class Player {
   reset() {
     this.#potentialMoves = [];
     this.smell = null;
+    this.gameboard.reset();
   }
 
   #getLastEvent() {
@@ -55,7 +56,6 @@ class Player {
 
   pcMove() {
     const lastEvent = this.#getLastEvent();
-    console.log(lastEvent);
 
     if (lastEvent === null) {
       this.randomMove();
