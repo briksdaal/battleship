@@ -40,12 +40,45 @@
   gap: var(--board-gap);
   justify-content: center;
   padding-bottom: var(--padding);
+  transition: transform 0.3s ease-out;
+}
+
+.placement .boards-container {
+  transform: translateX(
+    calc((var(--border) * 11 + var(--cell) * 10 + var(--board-gap)) / 2)
+  );
+}
+
+.boards-container h3 {
+  font-size: 1.5rem;
+  text-align: center;
+  padding-bottom: 16px;
+}
+
+.user-container {
+  position: relative;
+  text-align: center;
+}
+
+.opponent-container {
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.5s;
+  transition-delay: 0.2s;
+}
+
+.placement .opponent-container {
+  opacity: 0;
 }
 
 .status-container {
   flex: 1;
   text-align: center;
   padding-bottom: var(--padding);
+}
+
+.status-container h2 {
+  padding-bottom: 8px;
 }
 
 .footer {
@@ -66,14 +99,6 @@
   gap: var(--border);
   background-color: black;
   border: var(--border) solid black;
-}
-
-.placement .user-container .cell {
-  cursor: pointer;
-}
-
-.active-game .user-container .cell {
-  cursor: auto;
 }
 
 .cell {
@@ -101,9 +126,16 @@
   cursor: auto;
 }
 
-.user-container {
-  position: relative;
-  text-align: center;
+.placement .user-container .cell {
+  cursor: pointer;
+}
+
+.active-game .user-container .cell {
+  cursor: auto;
+}
+
+.game-over .opponent-container .cell{
+  cursor: auto;
 }
 
 .rotation-btn {
@@ -114,37 +146,6 @@
   cursor: pointer;
   right: -60px;
   top: 208px;
-}
-
-.boards-container h3 {
-  font-size: 1.5rem;
-  text-align: center;
-  padding-bottom: 16px;
-}
-
-.boards-container {
-  transition: transform 0.3s ease-out;
-}
-
-.placement .boards-container {
-  transform: translateX(
-    calc((var(--border) * 11 + var(--cell) * 10 + var(--board-gap)) / 2)
-  );
-}
-
-.opponent-container {
-  text-align: center;
-  opacity: 1;
-  transition: opacity 0.5s;
-  transition-delay: 0.2s;
-}
-
-.placement .opponent-container {
-  opacity: 0;
-}
-
-.status-container h2 {
-  padding-bottom: 8px;
 }
 
 .play-again-btn {
@@ -161,6 +162,10 @@
 }
 
 @media only screen and (max-width: 1200px) {
+  :root {
+    --board-gap: 60px;
+  }
+
   .boards-container {
     order: 2;
   }
@@ -168,11 +173,12 @@
   .footer {
     order: 4;
   }
+}
 
+@media only screen and (max-width: 960px) {
   .boards-container {
     transition: unset;
     flex-direction: column;
-    gap: 60px;
   }
 
   .placement .boards-container {
@@ -189,7 +195,7 @@
   }
 
   .rotation-btn {
-    left: calc(100vw / 2 + 80px);
+    left: calc(100vw / 2 + 140px);
     top: -14px;
     right: unset;
   }
@@ -200,15 +206,21 @@
     --cell: 30px;
     --padding: 30px;
   }
+
+  .rotation-btn {
+    left: calc(100vw / 2 + 100px);
+    top: -4px;
+    font-size: 2rem;
+  }
 }
 
 @media only screen and (max-width: 410px) {
   :root {
     --cell: 25px;
   }
-  .rotation-btn {
-    left: calc(100vw / 2 + 60px);
-    top: -4px;
-    font-size: 2rem;
+
+  .status-rotate-text {
+    width: 340px;
+    margin: 0 auto;
   }
 }

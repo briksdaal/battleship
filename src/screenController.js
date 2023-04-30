@@ -5,11 +5,11 @@ import GameController from './gameController';
 class ScreenController {
   constructor() {
     this.game = new GameController();
-    this.init();
+    this.createElements();
     this.placeShips();
   }
 
-  init() {
+  createElements() {
     // main container
     this.main = document.createElement('div');
     this.main.className = 'main';
@@ -97,6 +97,7 @@ class ScreenController {
   }
 
   placeShips() {
+    this.main.classList.remove('game-over');
     this.main.classList.add('placement');
 
     this.status.textContent = 'Place Carrier...';
@@ -125,8 +126,8 @@ class ScreenController {
   }
 
   showShip = (e) => {
-    const length = ScreenController.#ships[this.currentShip][1];
     this.renderBoard(this.game.player1);
+    const length = ScreenController.#ships[this.currentShip][1];
     const coordinates = [+e.target.dataset.row, +e.target.dataset.col];
     const [x, y] = coordinates;
 
@@ -135,6 +136,7 @@ class ScreenController {
       coordinates,
       this.rotationDirection,
     );
+
     const classer = legal ? 'ship' : 'hit';
 
     if (this.rotationDirection) {
@@ -171,7 +173,7 @@ class ScreenController {
       // when all ships placed continue to next stage
       this.finishPlacementStage();
     } else {
-      // update status text if needed
+      // update status text when ships remain
       const shipName = ScreenController.#ships[this.currentShip][0];
       this.status.textContent = `Place ${shipName}...`;
     }
@@ -228,20 +230,18 @@ class ScreenController {
   }
 
   setTurnHandler() {
-    this.main.className = 'main';
+    this.main.classList.remove('placement');
     this.main.classList.add('active-game');
     this.status.textContent = 'Attack!';
 
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
-        cell.addEventListener('click', this.boundPlayerMove);
+        cell.addEventListener('click', this.playerMove);
       });
     });
   }
 
-  boundPlayerMove = this.playerMove.bind(this);
-
-  playerMove(e) {
+  playerMove = (e) => {
     const coordinates = [e.target.dataset.row, e.target.dataset.col];
 
     if (this.game.player1.makeMove(coordinates)) {
@@ -261,15 +261,16 @@ class ScreenController {
         this.gameOverCleanUp(gameResult);
       }
     }
-  }
+  };
 
   gameOverCleanUp(winner) {
     this.main.className = 'main';
+    this.main.classList.remove('active-game');
     this.main.classList.add('game-over');
     this.status.textContent = `Game Over, ${winner === this.game.player1 ? 'You' : 'PC'} won!`;
     this.opponentBoard.forEach((arr) => {
       arr.forEach((cell) => {
-        cell.removeEventListener('click', this.boundPlayerMove);
+        cell.removeEventListener('click', this.playerMove);
       });
     });
 

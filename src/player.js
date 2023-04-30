@@ -32,8 +32,19 @@ class Player {
     this.gameboard.reset();
   }
 
-  #getLastEvent() {
-    return this.#enemy.gameboard.lastEvent;
+  randomPlace() {
+    for (let i = 0; i < 5; i += 1) {
+      let needToPlace = true;
+
+      while (needToPlace) {
+        needToPlace = !this.gameboard.placeShip(
+          i,
+          Player.#randomCoordinates(),
+          Player.#randomBoolean(),
+        );
+      }
+    }
+    return true;
   }
 
   makeMove(coordinates) {
@@ -44,28 +55,18 @@ class Player {
     return this.enemy.gameboard.receiveAttack(coordinates);
   }
 
-  randomMove() {
-    let needToMove = true;
-
-    while (needToMove) {
-      needToMove = !this.makeMove(Player.#randomCoordinates());
-    }
-
-    return true;
-  }
-
   pcMove() {
-    const lastEvent = this.#getLastEvent();
+    const { lastEvent } = this.#enemy.gameboard;
 
     if (lastEvent === null) {
-      this.randomMove();
+      this.#randomMove();
     } else if (lastEvent.type === 2) {
       this.smell = null;
       this.#potentialMoves = [];
-      this.randomMove();
+      this.#randomMove();
     } else if (lastEvent.type === 0) {
       if (this.#potentialMoves.length === 0) {
-        this.randomMove();
+        this.#randomMove();
       } else {
         this.#tryPotentials();
       }
@@ -86,26 +87,21 @@ class Player {
     }
   }
 
+  #randomMove() {
+    let needToMove = true;
+
+    while (needToMove) {
+      needToMove = !this.makeMove(Player.#randomCoordinates());
+    }
+
+    return true;
+  }
+
   #tryPotentials() {
     let coordinates;
     do {
       coordinates = this.#potentialMoves.pop();
     } while (!this.makeMove(coordinates));
-  }
-
-  randomPlace() {
-    for (let i = 0; i < 5; i += 1) {
-      let needToPlace = true;
-
-      while (needToPlace) {
-        needToPlace = !this.gameboard.placeShip(
-          i,
-          Player.#randomCoordinates(),
-          Player.#randomBoolean(),
-        );
-      }
-    }
-    return true;
   }
 
   testPlace() {
