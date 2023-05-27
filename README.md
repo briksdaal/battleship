@@ -1,5 +1,15 @@
-Battleship
+# Battleship
+A one player Battleship game to be played against the CPU
 
-Build a javascript Battleship game
+Available to play at:
+https://briksdaal.github.io/battleship/
 
-Using TDD, test and build the different game objects seperately from the DOM, then finally build the DOM and bring it all together.
+## Game Description
+- Classic game of Battleship
+- Player positions 5 ships on a 10x10 grid
+- Player and CPU take turns trying to sink each other's ships
+
+## Technical Description
+- Built using vanilla javascript
+- Logic and objects were designed and built using TDD methodology
+- AI is modeled after the Hunt/Target strategy and does well even against a strategic player
